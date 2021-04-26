@@ -483,7 +483,7 @@ for (let i = 0; i < slides.length; i++) {
     //     transition: opacity .6s ease;
     // `;
     dot.classList.add('dot'); /* или то что свеху! */
-
+    
     if (i == 0) {
         dot.style.opacity = 1;
     }
