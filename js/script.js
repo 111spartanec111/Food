@@ -409,7 +409,7 @@ function showThanksModal(message) {
 
 /* СЛАЙДЕР ------------------------------------------------------- */
 
-const slides = document.querySelectorAll('.offer__slide'),  /* Каждый слайд отдельно */
+const slides = document.querySelectorAll('.offer__slide'),  /* Каждые слайды отдельно */
       slider = document.querySelector('.offer__slider'),    /* ГЛАВНАЯ оболочка блока слайдера     ! */
       prev = document.querySelector('.offer__slider-prev'),   /* стрелочки */
       next = document.querySelector('.offer__slider-next'),
@@ -444,7 +444,7 @@ slides.forEach(slide => {
 slider.style.position = 'relative';
 
 const indicators = document.createElement('ol'),
-      dots = [];
+      dots = [];             /* переменная Массив, что бы туду положить все точки ниже !  dots.push(dot);  */
 
 indicators.classList.add('carousel-indicators');    /* в CSS прописан класс ! со стилями или можно добавить здесь через - Ниже!*/
 indicators.style.cssText = `
@@ -466,7 +466,7 @@ slider.append(indicators);
 /* создаём цикл , переменная итератор, будет заканчиваться когда меньше длинны slides,  i++ цикл увеличивается на 1 */
 for (let i = 0; i < slides.length; i++) {
     const dot = document.createElement('li');   /* создаём элемент */
-    dot.setAttribute('data-slide-to', i + 1);   /*к каждой точке устанавливается дата атрибут и прибавляем 1 */
+    dot.setAttribute('data-slide-to', i + 1);   /* к каждой точке устанавливается дата атрибут и прибавляем нумерацию 1, 2, 3 */
     // dot.style.cssText = `
     //     box-sizing: content-box;
     //     flex: 0 1 auto;
@@ -491,13 +491,22 @@ for (let i = 0; i < slides.length; i++) {
     dots.push(dot);   /* в dots помещаем dot */
 }
 
+
+function deleteNotDigits(str) {
+    return +str.replace(/\D/g, '');
+}
+
+
 next.addEventListener('click', () => {
     /* у переменной width (стоковый тип данных добавляем унарный +), методом slice начинаем с 0 символа и отрезаем последние 2 символа */
-    /* Метод slice() извлекает часть строки и возвращает новую строку без изменения оригинальной строки. */
-    if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {   
+    /* Метод slice() извлекает часть строки и возвращает новую строку без изменения оригинальной строки.
+    (offset == +width.slice(0, width.length - 2) * (slides.length - 1))  */
+
+    /* Меняем на регулярное выражение */
+    if (offset == deleteNotDigits(width) * (slides.length - 1)) {   /* Удаляем все НЕ числа через паттерн */
         offset = 0;
     } else {
-        offset += +width.slice(0, width.length - 2);
+        offset += deleteNotDigits(width);
     }
 
     slidesField.style.transform = `translateX(-${offset}px)`;  /* трансформируем по оси Х влево на offset */
@@ -521,9 +530,9 @@ next.addEventListener('click', () => {
 prev.addEventListener('click', () => {
     /* у переменной width (стоковый тип данных добавляем унарный +), методом slice начинаем с 0 символа и отрезаем последние 2 символа */
     if (offset == 0) {    /* Если первый слайд нажимаем на стрелку влево - то */ 
-        offset = +width.slice(0, width.length - 2) * (slides.length - 1);  /* В переменную offset записывается последний слайд который вычисляется по этой формуле */
+        offset = deleteNotDigits(width) * (slides.length - 1);  /* В переменную offset записывается последний слайд который вычисляется по этой формуле */
     } else {
-        offset -= +width.slice(0, width.length - 2); /* отнимаем ширину слайда */
+        offset -= deleteNotDigits(width); /* отнимаем ширину слайда */
     }
     
     slidesField.style.transform = `translateX(-${offset}px)`;  /* трансформируем по оси Х влево на offset */
@@ -540,7 +549,7 @@ prev.addEventListener('click', () => {
         current.textContent = slideIndex;
     }
 
-    dots.forEach(dot => dot.style.opacity = '.5');
+    dots.forEach(dot => dot.style.opacity = '.5');  
     dots[slideIndex - 1].style.opacity = 1;
 });
 
@@ -549,7 +558,7 @@ dots.forEach(dot => {    /* перебираем массив (в перемен
         const slideTo = e.target.getAttribute('data-slide-to');
 
         slideIndex = slideTo;
-        offset = +width.slice(0, width.length - 2) * (slideTo - 1); 
+        offset = deleteNotDigits(width) * (slideTo - 1); 
 
         slidesField.style.transform = `translateX(-${offset}px)`;
 
