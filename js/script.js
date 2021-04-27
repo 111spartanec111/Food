@@ -629,6 +629,80 @@ dots.forEach(dot => {    /* перебираем массив (в перемен
 
 
 
+/*   КАЛЬКУЛЯТОР ------------------------------------ */
+
+
+const result = document.querySelector('.calculating__result span');  /* Куда помещаем результат  */
+let sex = 'female',    /* по дефолту выбрали женщину */
+    height, weight, age,
+    ratio = 1.375;   /* по дефолту Невысокая активность */
+
+function calcTotal() {
+    if (!sex || !height || !weight || !age || !ratio) {
+        result.textContent = '----';
+        return;   /* Если что то НЕ ! введено, то return останавливает дальнейший код */
+    }
+    if (sex === 'female') {   /* если введена Формула для женщин */
+        result.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio);
+    } else {
+        result.textContent = Math.round((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio);
+    }
+}
+
+calcTotal();
+
+
+function getStaticInformation(parentSelector, activeClass) {
+    const elements = document.querySelectorAll(`${parentSelector} div`);
+
+    elements.forEach(elem => {    /* перебираем элементы что бы установить обработчик событий на каждый элемент, что ыб при клике на подложку не ломалось */
+        elem.addEventListener('click', (e) => {
+            if (e.target.getAttribute('data-ratio')) {
+                ratio = +e.target.getAttribute('data-ratio');
+            } else {
+                sex = e.target.getAttribute('id');
+            }
+    
+            elements.forEach(elem => {
+                elem.classList.remove(activeClass);
+            });
+            e.target.classList.add(activeClass);
+    
+            calcTotal();
+        });
+    })
+}
+
+getStaticInformation('#gender', 'calculating__choose-item_active');  /* Объявляем функцию и внееё передаюм 2 значения parentSelector, activeClass.  Выбор parentSelector по ID */
+getStaticInformation('.calculating__choose_big', 'calculating__choose-item_active');   /* Выбор parentSelector по классу (обязательно с точкой parentselector) */
+
+
+function getDynamicInformation(selector) {
+    const input = document.querySelector(selector);
+
+    input.addEventListener('input', () => {   /* Ссылаемся на id инпута */
+        switch(input.getAttribute('id')) {
+            case 'height': 
+                  height = +input.value;
+                  break;
+            case 'weight':
+                  weight = +input.value;
+                  break;
+            case 'age':
+                  age = +input.value;
+                  break;     
+        }
+
+        calcTotal();  /* Вызываем пересчёт каждый раз  */
+    });
+}
+
+getDynamicInformation('#height');  /* Вызываем функцию и передаём в неё ID инпутов  */
+getDynamicInformation('#weight');
+getDynamicInformation('#age');
+
+
+
 
 });  /* Конец -------------------- */
 
