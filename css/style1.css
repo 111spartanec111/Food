@@ -119,7 +119,8 @@ a {
 	bottom: -1px;
 	z-index: -1;
 	height: 8px;
-	background: #54ed39
+	background: #d52113;
+	opacity: 0.7;
 }
 
 .header__link:last-child {
@@ -414,15 +415,15 @@ a {
 	box-shadow: 0 4px 15px rgba(0, 0, 0, .2);
 	border: none;
 	text-align: center;
-	font-size: 14px;
+	font-size: 15px;
 	cursor: pointer;
 	outline: 0;
-	transition: .3s all
+	transition: .3s all;
 }
 
 .calculating__choose-item_active {
 	color: #fff;
-	background-color: #54ed39
+	background-color: #d52113;
 }
 
 .calculating__choose_medium {

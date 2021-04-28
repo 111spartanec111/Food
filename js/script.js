@@ -633,9 +633,38 @@ dots.forEach(dot => {    /* перебираем массив (в перемен
 
 
 const result = document.querySelector('.calculating__result span');  /* Куда помещаем результат  */
-let sex = 'female',    /* по дефолту выбрали женщину */
-    height, weight, age,
-    ratio = 1.375;   /* по дефолту Невысокая активность */
+let sex, height, weight, age, ratio;   
+
+    if (localStorage.getItem('sex')) {     
+        sex = localStorage.getItem('sex');
+    } else {
+        sex = 'female';
+        localStorage.setItem('sex', 'female');  /* по дефолту выбрали женщину */
+    }
+
+    if (localStorage.getItem('ratio')) {     /* Если в localStorage есть значение ratio то присваиваием ratio это значение. */
+        ratio = localStorage.getItem('ratio');
+    } else {
+        ratio = 1.375;   /* По дефолту Если нет, то присваиваем значение 1.375 и записываем его в localstorage */
+        localStorage.setItem('ratio', 1.375);  
+    }
+
+function initLocalSettings(selector, activeClass) {
+    const elements = document.querySelectorAll(selector);
+
+    elements.forEach(elem => {
+        elem.classList.remove(activeClass);
+        if (elem.getAttribute('id') === localStorage.getItem('sex')) {
+            elem.classList.add(activeClass);
+        }
+        if (elem.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
+            elem.classList.add(activeClass);
+        }
+    });
+}
+
+initLocalSettings('#gender div', 'calculating__choose-item_active');   /* Проверка класса активности */
+initLocalSettings('.calculating__choose_big div', 'calculating__choose-item_active');
 
 function calcTotal() {
     if (!sex || !height || !weight || !age || !ratio) {
@@ -652,15 +681,17 @@ function calcTotal() {
 calcTotal();
 
 
-function getStaticInformation(parentSelector, activeClass) {
-    const elements = document.querySelectorAll(`${parentSelector} div`);
+function getStaticInformation(selector, activeClass) {
+    const elements = document.querySelectorAll(selector);
 
     elements.forEach(elem => {    /* перебираем элементы что бы установить обработчик событий на каждый элемент, что ыб при клике на подложку не ломалось */
         elem.addEventListener('click', (e) => {
             if (e.target.getAttribute('data-ratio')) {
                 ratio = +e.target.getAttribute('data-ratio');
+                localStorage.setItem('ratio', +e.target.getAttribute('data-ratio'));
             } else {
                 sex = e.target.getAttribute('id');
+                localStorage.setItem('sex', e.target.getAttribute('id'));
             }
     
             elements.forEach(elem => {
@@ -673,14 +704,21 @@ function getStaticInformation(parentSelector, activeClass) {
     })
 }
 
-getStaticInformation('#gender', 'calculating__choose-item_active');  /* Объявляем функцию и внееё передаюм 2 значения parentSelector, activeClass.  Выбор parentSelector по ID */
-getStaticInformation('.calculating__choose_big', 'calculating__choose-item_active');   /* Выбор parentSelector по классу (обязательно с точкой parentselector) */
+getStaticInformation('#gender div', 'calculating__choose-item_active');  /* Объявляем функцию и внееё передаюм 2 значения parentSelector, activeClass.  Выбор parentSelector по ID */
+getStaticInformation('.calculating__choose_big div', 'calculating__choose-item_active');   /* Выбор parentSelector по классу (обязательно с точкой parentselector) */
 
 
 function getDynamicInformation(selector) {
     const input = document.querySelector(selector);
 
     input.addEventListener('input', () => {   /* Ссылаемся на id инпута */
+
+        if (input.value.match(/\D/g)) {   /* Проверяем есть ли любой символ кроме цифры match(/\D/g) */
+            input.style.border = '1px solid red';  /* тогда красим в красный */
+        } else {
+            input.style.border = 'none';
+        }
+
         switch(input.getAttribute('id')) {
             case 'height': 
                   height = +input.value;
