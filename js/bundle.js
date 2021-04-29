@@ -855,12 +855,24 @@ var __webpack_exports__ = {};
   \**********************/
 
 /* Для запуска Сервера json сипользовать команду ->  npx json-server db.json */
+/* Для запуска сборщика Webpack команда  npx webpack */
+
+/* Каждый модуль оборачиваем в функцию , а после его записать как модуль пример:
+
+function calc() {
+    "Скрипт с калькулятором"
+}
+
+module.exports = calc;
+
+в итоговом файле задать переменные которые будут ссылаться на модули и в конце вызвать эти функции. */
+
 
 window.addEventListener('DOMContentLoaded', () => {
 
     const tabs = __webpack_require__(/*! ./modules/tabs */ "./js/modules/tabs.js"),
           modal = __webpack_require__(/*! ./modules/modal */ "./js/modules/modal.js"),
-          timer =__webpack_require__(/*! ./modules/timer */ "./js/modules/timer.js"),
+          timer = __webpack_require__(/*! ./modules/timer */ "./js/modules/timer.js"),
           cards = __webpack_require__(/*! ./modules/cards */ "./js/modules/cards.js"),
           calc = __webpack_require__(/*! ./modules/calc */ "./js/modules/calc.js"),
           forms = __webpack_require__(/*! ./modules/forms */ "./js/modules/forms.js"),
