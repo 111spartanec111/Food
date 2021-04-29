@@ -1,11 +1,33 @@
-function modal() {
+    /* Переносим открытие модалки в Функцию !!!  то что тпереь снизу  */
+    function openModal(modalSelector, modalTimerId) {
+        const modal = document.querySelector(modalSelector);
+
+        modal.classList.add('show');   
+        modal.classList.remove('hide');
+        document.body.style.overflow = 'hidden';
+
+        if (modalTimerId) {   /* Если передан modalTimerId то срабатывает функция clearInterval */
+            clearInterval(modalTimerId);  /* Если мы открыли модалку, то она не будет появляться modalTimerId прописанный ниже */
+        }
+        
+    }
+    function closeModal(modalSelector) {   /* Создаём функцию что бы код не использовать/не прописывать во всех закрытиях по многу раз */
+        const modal = document.querySelector(modalSelector);
+
+        modal.classList.add('hide');
+        modal.classList.remove('show');
+        document.body.style.overflow = '';  /* overflow пустой что бы скролл вернулся после закрытия модалки */
+    }
+
+
+function modal(triggerSelector, modalSelector, modalTimerId) {
     
 /*    MODAL  ------------------------------------------------------------------------- */
 
 /* В css создать классы hide-display=none  и класс show-display=block  */
 
-const modalTrigger = document.querySelectorAll('[data-modal]'),    /* задаём кнопки по дата атрибутам  ALL - псевдомассив */
-      modal = document.querySelector('.modal');                 /* задаём модальное окно */
+const modalTrigger = document.querySelectorAll(triggerSelector),    /* задаём кнопки по дата атрибутам  ALL - псевдомассив */
+      modal = document.querySelector(modalSelector);                 /* задаём модальное окно */
     //   modalCloseBtn = document.querySelector('[data-close]');    /* (142 строка) крестик в модальном окне */
 
       /* Клик для показа модалка по data-modal */
@@ -20,15 +42,9 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),    /* задаё
     // });  
 
 
-    /* Переносим открытие модалки в Функцию !!!  то что сверху */
-    function openModal() {
-        modal.classList.add('show');   
-        modal.classList.remove('hide');
-        document.body.style.overflow = 'hidden';
-        clearInterval(modalTimerId);  /* Если мы открыли модалку, то она не будет появляться modalTimerId прописанный ниже */
-    }
+
     modalTrigger.forEach(btn => {   /* Т.к. псевдомассив, его необходимо перебрать(forEach), что бы срабатывало на все кнопки с дата атрибутом */
-        btn.addEventListener('click', openModal);  /* Добавляем функцию объявленную выше !!! */  
+        btn.addEventListener('click', () => openModal(modalSelector, modalTimerId));  /* Добавляем функцию объявленную выше !!! */  
     });
     
 /* Вызов модалки если querySelector !!! без All !!!  то есть по первой кнопки вверствке, для работы со всеми кнопками то что выше!!! , у .modal  в свойствах написано display = none */
@@ -38,11 +54,7 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),    /* задаё
     //     document.body.style.overflow = 'hidden';  /* К body добавляем стиль overflow=hidden Что бы не прокручивалась страница */
     //   });
 
-    function closeModal() {   /* Создаём функцию что бы код не использовать/не прописывать во всех закрытиях по многу раз */
-        modal.classList.add('hide');
-        modal.classList.remove('show');
-        document.body.style.overflow = '';  /* overflow пустой что бы скролл вернулся после закрытия модалки */
-    }
+
 
     /* Крестик */
     // modalCloseBtn.addEventListener('click', closeModal);  /* (142 строка)  При клике на КРЕСТИК выполняется эта Функция прописанная ранее */
@@ -50,26 +62,24 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),    /* задаё
     /* Подложка */
     modal.addEventListener('click', (e) => {   /* При клике На подложку/фон закрываем модалку */
         if (e.target === modal || e.target.getAttribute('data-close') == '') {  /* Клик на подложку или КРЕСТИК то модалка закрывается */
-            closeModal();  /* Вызываем функцию, что бы она работала После улсовия if */
+            closeModal(modalSelector);  /* Вызываем функцию, что бы она работала После улсовия if */
         }
     });
 
       /* ESCAPE */
     document.addEventListener('keydown', (e) => {  /* keydown - по клику какой нибудь кнопки на клавиатуре!!! */
         if ( e.code === "Escape" && modal.classList.contains('show')) {   /* проверяем, если содержится класс show в modal то тогда Escape сработает */
-            closeModal();
+            closeModal(modalSelector);
         }
     });
 
 
-    /* Модалка по времени ----------------------------------------------*/
-    const modalTimerId = setTimeout(openModal, 50000);   /* Таймаут для появления модалки через секунды после обновления страницы */
 
 
     /* По скролу вызываем модалку */
     function showModalByScroll() {  /* Создаём функцию , если видимое окно + высота прокрутки >= всей высоте документа, то вызывается функция openModal(); После выполения функции отменяем её в window.removeEventListener*/
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-            openModal();
+            openModal(modalSelector, modalTimerId);
             window.removeEventListener('scroll', showModalByScroll);
         }
     }
@@ -97,4 +107,6 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),    /* задаё
 
 }
 
-module.exports = modal;
+export default modal;
+export {closeModal};
+export {openModal};

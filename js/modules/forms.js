@@ -1,9 +1,12 @@
-function forms() {
+import {closeModal, openModal} from './modal';
+import {postData} from '../services/services';
+
+function forms(formSelector, modalTimerId) {
 
 /*   FORMS -------------------------------------------------------------------------------- */
 
 
-const forms = document.querySelectorAll('form'); /* Создаём переменную форм и прикрепляем её ко всем формам */
+const forms = document.querySelectorAll(formSelector); /* Создаём переменную форм и прикрепляем её ко всем формам */
 
 const message = {   /* переменная с сообщениями которые вставляем после нажатия на кнопку Отправить */
     loading: 'icons/spinner.svg',
@@ -16,16 +19,7 @@ forms.forEach(item => {   /* Переборка массива т.к. querySelec
     bindPostData(item);    /* Подвязываем функцию postData к формам переменная - forms */
 });
 
-const postData = async (url, data) => {   /* async Внутри функции будет асинхронный код */
-    const res = await fetch(url, {       /* await ждёт результата запроса того что ниже */
-        method:"POST",       /* Если проммис попадает на ошибку которая связана с http протоколом, то он не будет ошибочным(reject). */
-        headers: {            /* reject будет возникать только при отсутствии сети Offline */
-            'Content-type': 'application/json' 
-        },
-        body: data
-    });
-    return await res.json();  /* await ждёт выполнения функции */
-};
+/* отсюда вырезали postData в модуль services.js */
 
 function bindPostData(form) {   /* Создаём функцию отправки формы, подвязываем её выше*/
     form.addEventListener('submit', (e) => {   /* по деволту в верстке у кнопок стоит submit */
@@ -99,7 +93,7 @@ function showThanksModal(message) {
     const prevModalDialog = document.querySelector('.modal__dialog');
 
     prevModalDialog.classList.add('hide');   /* Скрываем модалку modal__dialog по добавлению класса hide */
-    openModal();
+    openModal('.modal', modalTimerId);
 
     const thanksModal = document.createElement('div');
     thanksModal.classList.add('modal__dialog');  /* Добавляем новый элемент DIV с классом  modal__dialog */
@@ -114,7 +108,7 @@ function showThanksModal(message) {
         thanksModal.remove();
         prevModalDialog.classList.add('show');
         prevModalDialog.classList.remove('hide');
-        closeModal();
+        closeModal('.modal');
     }, 4000);
 }
   
@@ -124,4 +118,4 @@ function showThanksModal(message) {
     
 }
 
-module.exports = forms;
+export default forms;

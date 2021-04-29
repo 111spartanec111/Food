@@ -1,15 +1,15 @@
-function slider() {
+function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field}) {
     
 /* СЛАЙДЕР ------------------------------------------------------- */
 
-const slides = document.querySelectorAll('.offer__slide'),  /* Каждые слайды отдельно */
-      slider = document.querySelector('.offer__slider'),    /* ГЛАВНАЯ оболочка блока слайдера     ! */
-      prev = document.querySelector('.offer__slider-prev'),   /* стрелочки */
-      next = document.querySelector('.offer__slider-next'),
-      total = document.querySelector('#total'),         /* Общее количество слайдов */
-      current = document.querySelector('#current'),     /* текущий слайд */
-      slidesWrapper = document.querySelector('.offer__slider-wrapper'),  /* ДЛЯ Карусели */
-      slidesField = document.querySelector('.offer__slider-inner'),   /* Сама карусель */
+const slides = document.querySelectorAll(slide),  /* Каждые слайды отдельно */
+      slider = document.querySelector(container),    /* ГЛАВНАЯ оболочка блока слайдера     ! */
+      prev = document.querySelector(prevArrow),   /* стрелочки */
+      next = document.querySelector(nextArrow),
+      total = document.querySelector(totalCounter),         /* Общее количество слайдов */
+      current = document.querySelector(currentCounter),     /* текущий слайд */
+      slidesWrapper = document.querySelector(wrapper),  /* ДЛЯ Карусели */
+      slidesField = document.querySelector(field),   /* Сама карусель */
       width = window.getComputedStyle(slidesWrapper).width;  /* Получаем стили (ширину) у окошка через которое будем смотреть на слайдер */
 
 let slideIndex = 1;
@@ -221,4 +221,4 @@ dots.forEach(dot => {    /* перебираем массив (в перемен
 /* Конец слайдера!  */
 }
 
-module.exports = slider;
+export default slider;

@@ -1,3 +1,6 @@
+import {getResource} from '../services/services';
+
+
 function cards() {
     /*   Используем CLASS Карточки, шаблонизируем   ----------------------------------------------------------------------- */
 
@@ -40,15 +43,7 @@ function cards() {
         }
     }
     
-    
-    /* Отправка данных из db.json на сайт  GET */
-    const getResource = async (url) => {   /* async Внутри функции будет асинхронный код */
-        const res = await fetch(url);
-        if (!res.ok) {
-            throw new Error(`Could not fetch ${url}, status: ${res.status}`);  /* Создаём ошибку вручную, если запрос не выполнился */
-        }
-        return await res.json();  /* await ждёт выполнения функции */
-    };
+    /* Отсюда вырезали getResource в сервисы */
     
     getResource('http://localhost:3000/menu')
     .then(data => {                  /* из промисса выдаётся массив из db.json */
@@ -91,4 +86,4 @@ function cards() {
     // }
 }
 
-module.exports = cards;
+export default cards;
